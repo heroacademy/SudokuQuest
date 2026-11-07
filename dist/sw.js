@@ -1,5 +1,5 @@
-const CACHE = 'hero-academy-sudoku-v1';
-const ASSETS = ['./', './index.html', './styles.css', './app.mjs', './sudoku.mjs', './favicon.svg', './manifest.webmanifest'];
+const CACHE = 'hero-academy-sudoku-v2';
+const ASSETS = ['./', './index.html', './styles.css', './academy-client.js', './academy-client.css', './academy-adapter.js', './app.mjs', './sudoku.mjs', './favicon.svg', './manifest.webmanifest'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });

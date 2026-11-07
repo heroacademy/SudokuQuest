@@ -1,3 +1,5 @@
+import { bootAcademy } from './academy-client.js';
+import { sudokuAdapter } from './academy-adapter.js';
 import { createPuzzle, hashSeed, candidates, getPeers, getHelpfulCell, completed, FORMATS } from './sudoku.mjs';
 
 const STORAGE_KEY = 'hero-academy-sudoku-v1';
@@ -62,6 +64,7 @@ function isValidRun(run) {
     run.puzzle.every((v, i) => !v || (v === run.solution[i] && v === run.board[i]));
 }
 let data = load();
+let academy = null;
 let view = 'home';
 let selected = -1;
 let notesMode = false;
@@ -77,9 +80,10 @@ const nextLevel = level => LEVELS[LEVELS.indexOf(level) + 1];
 const completedCount = p => new Set(p.completed).size;
 const formatTime = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
-function save() {
+function save(sync = true) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
   catch { showToast('Your device could not save this time. You can export a backup in Settings.'); }
+  if(sync)void academy?.flush();
 }
 function showToast(message) {
   const el = $('#toast');
@@ -156,6 +160,7 @@ function renderChapter(chapterId) {
   prepareUi();
 }
 function startLevel(levelId, forceNew = false) {
+  academy?.recordAttempt();
   const level = levelById(levelId);
   if (!level) return;
   const p = profile();
@@ -337,17 +342,6 @@ function finishLevel() {
   p.totalSeconds = (p.totalSeconds || 0) + run.seconds;
   p.hints = (p.hints || 0) + run.hints;
   p.attempts = (p.attempts || 0) + run.attempts;
-  // A minimal offline activity summary, ready for a future parent-approved
-  // ChoreQuest adapter. No answers, individual moves, or child names are queued.
-  data.pendingActivity ||= [];
-  data.pendingActivity.push({
-    eventId: id(), game: 'sudoku-quest', type: 'puzzle_completed', schemaVersion: 1,
-    heroLocalId: p.id, occurredAt: new Date().toISOString(),
-    levelId: level.id, gridSize: level.size, elapsedSeconds: run.seconds,
-    hintsUsed: run.hints, attempts: run.attempts, firstCompletion: firstTime,
-    heroXpEarned: earned,
-  });
-  data.pendingActivity = data.pendingActivity.slice(-200);
   if (p.runs) delete p.runs[level.id];
   p.run = null;
   save();
@@ -386,7 +380,7 @@ function showSettings() {
     <label class="toggle-line"><input type="checkbox" data-setting="guide" ${data.settings.guide ? 'checked' : ''}> <span>💡 Highlight possible numbers</span></label>
     <label class="toggle-line"><input type="checkbox" data-setting="largeText" ${data.settings.largeText ? 'checked' : ''}> <span>🔎 Larger numbers and text</span></label>
     <div class="dialog-actions"><button class="btn btn-dark btn-sm" data-action="export">↓ Export my progress</button><button class="btn btn-ghost btn-sm" data-action="import">↑ Import backup</button><input type="file" id="import-file" accept="application/json,.json" hidden></div>
-    <p style="font-size:12px">Progress stays on this device. A parent-approved ChoreQuest connection will need to be enabled on the game's eventual public domain for shared sign-in and family activity reporting.</p>
+    <p style="font-size:12px">Progress stays on this device. Connect through My Academy for parent-approved cloud saves, shared Hero XP and short play summaries. Local puzzle stars stay separate from shared XP.</p>
     <div class="dialog-actions"><button class="btn btn-primary" data-action="close">All done ✦</button></div>`);
 }
 function showProfiles() {
@@ -502,3 +496,5 @@ if ('serviceWorker' in navigator) window.addEventListener('load', () => {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 });
 renderHome();
+
+try { academy = await bootAcademy(sudokuAdapter({getData:()=>data,levels:LEVELS,makeProfile,validProfile,validRun:isValidRun,persist:()=>save(false),refresh:()=>{closeDialog();selected=-1;renderHome();}})); } catch { showToast('Local play is ready. Connect through My Academy when online.'); }

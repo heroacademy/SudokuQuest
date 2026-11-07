@@ -49,3 +49,9 @@ See [CHOREQUEST_INTEGRATION.md](./CHOREQUEST_INTEGRATION.md). Game events are qu
 - Respect reduced motion preference; larger text option.
 - Gentle, non-punitive feedback and optional hints that never deduct XP.
 - Per-device local progress, backup export/import, no analytics, no behavioural ads.
+
+## Shared family connection (7 November 2026)
+
+Sign in at https://heroacademy.app/play/ with the existing ChoreQuest account. A parent grants each child access, then Play exchanges a single-use launch fragment for an origin/game/child-scoped capability. The vendored Academy SDK handles cloud revisions, explicit local/cloud conflict choices, disconnection, offline retries and minimal foreground usage summaries. Siblings and local backups remain local; only the selected learner is synced. Existing completed milestones are not back-credited. New stable zero-based milestones earn server-configured non-financial Hero XP once. Local game stars and the chore/money ledger remain separate. No parent cookies or credentials enter the game.
+
+Production currently uses Cloudflare Pages direct upload (`hero-academy-sudokuquest`). Run `node scripts/build-connector-pages.mjs` to reproduce the text-only static adapter. Cloudflare Git installation for the heroacademy organisation failed; GitHub Pages workflows remain available after Pages is enabled in the repository. Verify the actual deployment after each release.

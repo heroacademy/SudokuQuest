@@ -1,23 +1,7 @@
-# ChoreQuest connection contract
+# Approved Hero Academy integration
 
-Sudoku Quest uses the same integration direction as the other Hero Academy games: ChoreQuest is the parent-controlled identity and family dashboard; games remain playable without sign-in.
+## Shared family connection (7 November 2026)
 
-## Implemented foundation
+Sign in at https://heroacademy.app/play/ with the existing ChoreQuest account. A parent grants each child access, then Play exchanges a single-use launch fragment for an origin/game/child-scoped capability. The vendored Academy SDK handles cloud revisions, explicit local/cloud conflict choices, disconnection, offline retries and minimal foreground usage summaries. Siblings and local backups remain local; only the selected learner is synced. Existing completed milestones are not back-credited. New stable zero-based milestones earn server-configured non-financial Hero XP once. Local game stars and the chore/money ledger remain separate. No parent cookies or credentials enter the game.
 
-- Each learner has a local-only `heroLocalId` and saved progress.
-- Each completed puzzle appends a unique `eventId` activity summary to `pendingActivity` in local storage. The queue is capped at 200 records.
-- Summary includes game, puzzle ID, grid size, first/repeat completion, play duration, hint count, attempt count and non-redeemable Hero XP.
-- The queue excludes names, exact answers and individual moves.
-- Backups preserve the pending queue.
-
-## Required before enabling live connection
-
-1. Agree a **stable production origin** for Sudoku Quest, such as `sudoku.heroacademy.app`, and register it against ChoreQuest's allowed return origins.
-2. Use ChoreQuest's documented parent-approved child connection flow. Do not send a session token through a URL fragment or query string, and do not collect child email addresses. Use short-lived one-use authorization codes, `state`, PKCE where applicable, and an authenticated server-side exchange.
-3. Add a same-origin server adapter (or a supported backend-for-frontend) that binds the ChoreQuest child identity to a local profile and keeps credentials out of browser local storage. The static app must not embed a client secret or privileged API token.
-4. Reconcile activity using server-enforced child permissions, dedupe by `(game, eventId)`, and accept only permitted summary types. Once acknowledged, remove just those events from `pendingActivity`.
-5. Map the queued `heroXpEarned` to **Hero XP only**, never ChoreQuest chore points, money, or reward balances.
-6. Provide parent-visible revoke/disconnect controls, cloud save conflict resolution, offline retry, rate limiting and data retention consistent with the existing ChoreQuest service.
-7. Add tests for expired codes, unauthorized origins, revoked family access, replayed events, retries, duplicate submissions and offline conflict resolution.
-
-No ChoreQuest synchronization is active in this private Site preview; the UI explains this plainly. Do not label activity as synchronized until backend verification succeeds.
+Canonical origin: https://sudoku.heroacademy.app. Game id: sudokuquest. Stable levels follow the existing 36-level order and map to milestones 0–35. First puzzle completion earns 20 shared XP; repeat local stars never earn duplicate shared XP. Legacy pendingActivity remains in device backups only and is never uploaded/back-credited.
