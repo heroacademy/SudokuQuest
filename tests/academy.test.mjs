@@ -18,6 +18,6 @@ test('selected Sudoku hero survives cloud restore, siblings stay separate, and o
  const client=await bootAcademy(adapter,platform);assert.deepEqual(credits,[]);assert.equal(cloud.id,'local');
  d.profiles[0].completed.push('last');await client.flush();await client.flush();assert.deepEqual(credits,['1']);
  online=false;d.profiles[0].xp=40;await client.flush();assert.equal(d.profiles[0].xp,40);
- adapter.restore({id:'foreign',name:'Cloud',completed:['last'],xp:20,run:{bad:true}});assert.equal(d.activeProfileId,'local');assert.equal(d.profiles[0].id,'local');assert.equal(d.profiles[0].run,null);assert.deepEqual(d.profiles[1],sibling);
+ adapter.restore({id:'foreign',name:'Cloud',avatar:'<img src=x onerror=alert(1)>',completed:['last'],xp:20,run:{bad:true}});assert.equal(d.activeProfileId,'local');assert.equal(d.profiles[0].id,'local');assert.equal(d.profiles[0].run,null);assert.equal(d.profiles[0].avatar,'🦊');assert.deepEqual(d.profiles[1],sibling);
  assert.deepEqual(adapter.milestones(),[1]);assert(!adapter.select('missing'));assert.equal(adapter.create({name:'New'}),'new');assert.equal(d.profiles.length,3);client.stop();
 });
