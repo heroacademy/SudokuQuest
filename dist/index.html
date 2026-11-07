@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#17474b">
+  <meta name="description" content="Hero Academy Sudoku Quest: learn Sudoku one square at a time, with Pip's helpful tips, gentle puzzles, and an adventure from 1×1 to 9×9.">
+  <title>Sudoku Quest · Hero Academy</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the game</a>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <button id="home-brand" class="brand" type="button" aria-label="Sudoku Quest home">
+          <span class="brand-mark" aria-hidden="true">✦</span>
+          <span class="brand-type"><span class="brand-overline">HERO ACADEMY</span><strong>Sudoku <em>Quest</em></strong></span>
+        </button>
+        <nav class="header-actions" aria-label="Game navigation">
+          <button id="nav-map" class="header-link" type="button"><span aria-hidden="true">⌂</span> <span>Adventure map</span></button>
+          <button id="nav-help" class="header-link" type="button"><span aria-hidden="true">?</span> <span>How to play</span></button>
+          <button id="nav-settings" class="icon-button" type="button" aria-label="Settings" title="Settings">⚙</button>
+          <button id="nav-profile" class="profile-pill" type="button" aria-label="Switch learner"><span id="profile-avatar" aria-hidden="true">🦊</span><span id="profile-name">Explorer</span><span aria-hidden="true">⌄</span></button>
+        </nav>
+      </div>
+    </header>
+    <main id="main" tabindex="-1"><div id="screen" aria-live="off"></div></main>
+    <footer class="site-footer"><span>✦ Made for curious little minds</span><span><a href="https://heroacademy.app/" target="_blank" rel="noopener noreferrer">More Hero Academy adventures ↗</a></span><span>Take your time. Every hero starts small. ♥</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="dialog-root"></div>
+  <script type="module" src="./app.mjs"></script>
+</body>
+</html>
